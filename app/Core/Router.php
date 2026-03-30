@@ -14,10 +14,13 @@ class Router {
     public function dispatch() {
         $url = $_SERVER['REQUEST_URI'];
         $method = $_SERVER['REQUEST_METHOD'];
+        
         foreach ($this->routes as $route) {
-            if ($method == $route[0] && $url == $route[1]) {
+            $pattern = '#^' . str_replace('{id}', '(\d+)', $route[1]) . '$#';
+            if (preg_match($pattern, $url, $matches)) {                
                 [$class, $method] = ($route[2]);
-                call_user_func([new $class(), $method]);
+                $controller = new $class();
+                $controller->$method($matches[1]);
             }
         }
     }
