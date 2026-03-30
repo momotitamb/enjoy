@@ -14,11 +14,16 @@ class PostController extends Controller {
     }
 
     public function create() {
-        echo '';
+        $this->render('posts/create');
     }
 
     public function store() {
-        echo '';
+        $title = $_POST['title'];
+        $content = $_POST['content'];
+        $slug = strtolower(str_replace(' ', '-', $title));
+        (new Post())->create($title, $slug, $content);
+        header('Location: /');
+        exit();
     }
 
     public function edit() {
