@@ -1,10 +1,12 @@
 <?php
 
+
 class Database {
     private static $instance;
 
     private function __construct() {
-        self::$instance = new PDO("mysql:host=localhost;dbname=cms", "root", "");
+        $config = require __DIR__ . '/../../config/database.php';
+        self::$instance = new PDO("mysql:host={$config['host']};dbname={$config['dbname']}", $config['user'], $config['password']);
     }
 
     static function getInstance() {
