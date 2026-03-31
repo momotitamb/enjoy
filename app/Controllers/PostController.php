@@ -3,13 +3,13 @@
 class PostController extends Controller {
 
     public function index() {
-        $post = new Post();
-        $posts = $post->all();
+        $post = new PostRepository();
+        $posts = $post->getAll();
         $this->render('posts/index', ['posts' => $posts]);
     }    
 
     public function show($id) {
-        $post = (new Post())->find($id);
+        $post = (new PostRepository())->findById($id);
         $this->render('posts/show', ['post' => $post]);
     }
 
@@ -21,13 +21,13 @@ class PostController extends Controller {
         $title = $_POST['title'];
         $content = $_POST['content'];
         $slug = strtolower(str_replace(' ', '-', $title));
-        (new Post())->create($title, $slug, $content);
+        (new PostRepository())->create(['title' => $title, 'slug' => $slug, 'content' => $content]);
         header('Location: /');
         exit();
     }
 
     public function edit($id) {
-        $post = (new Post())->find($id);
+        $post = (new PostRepository())->findById($id);
         $this->render('posts/edit', ['post' => $post]);
     }
 
@@ -35,13 +35,13 @@ class PostController extends Controller {
         $title = $_POST['title'];
         $content = $_POST['content'];
         $slug = strtolower(str_replace(' ', '-', $title));
-        (new Post())->update($title, $slug, $content, $id);
+        (new PostRepository())->update($id, ['title' => $title, 'slug' => $slug, 'content' => $content]);
         header('Location: /');
         exit();
     }
 
     public function destroy($id) {
-        (new Post())->delete($id);
+        (new PostRepository())->delete($id);
         header('Location: /');
         exit();
     }

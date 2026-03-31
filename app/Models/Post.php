@@ -4,7 +4,7 @@
 class Post {
     public function all() {
         $pdo = Database::getInstance();
-        $stmt = $pdo->prepare("SELECT * FROM posts");
+        $stmt = $pdo->prepare("SELECT * FROM posts ORDER BY id DESC");
         $stmt->execute();
         $posts = $stmt->fetchAll();
         return $posts;
