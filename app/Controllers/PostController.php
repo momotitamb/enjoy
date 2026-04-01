@@ -1,9 +1,9 @@
 <?php
 
 class PostController extends Controller {
-    private RepositoryInterface $repo;
+    private PostRepositoryInterface $repo;
 
-    public function __construct(RepositoryInterface $repo) {
+    public function __construct(PostRepositoryInterface $repo) {
         $this->repo = $repo;
     }
 
@@ -15,6 +15,11 @@ class PostController extends Controller {
     public function show($id) {
         $post = $this->repo->findById($id);
         $this->render('posts/show', ['post' => $post]);
+    }
+
+    public function showBySlug($slug) {
+        $post = $this->repo->findBySlug($slug);
+        $this->render('posts/slug', ['post' => $post]);
     }
 
     public function create() {

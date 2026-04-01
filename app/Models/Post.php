@@ -18,6 +18,14 @@ class Post {
         return $post;
     }
 
+    public function findBySlug(string $slug) {
+        $pdo = Database::getInstance();
+        $stmt = $pdo->prepare("SELECT * FROM posts WHERE slug = ?");
+        $stmt->execute([$slug]);
+        $post = $stmt->fetch();
+        return $post;
+    }
+
     public function create($title, $slug, $content) {
         $pdo = Database::getInstance();
         $stmt = $pdo->prepare("INSERT INTO posts (title, slug, content) VALUES (?, ?, ?)");

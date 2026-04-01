@@ -32,7 +32,11 @@ class Router {
         }
 
         foreach ($this->routes as $route) {
-            $pattern = '#^' . preg_replace('/\{[a-z]+\}/', '(\d+)', $route[1]) . '$#';
+            $pattern = '#^' . str_replace(
+                ['{id}', '{slug}'], 
+                ['(\d+)', '([a-z0-9-]+)'],  
+                $route[1]
+            ) . '$#';
             if ($method == $route[0] && preg_match($pattern, $url, $matches)) {                
                 [$class, $action] = ($route[2]);
                 $controller = $this->container->make($class);

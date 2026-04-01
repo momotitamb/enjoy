@@ -1,6 +1,6 @@
 <?php
 
-class PostRepository implements RepositoryInterface {
+class PostRepository implements PostRepositoryInterface {
     public function getAll(): array {
         return (new Post())->all();
     }
@@ -19,5 +19,10 @@ class PostRepository implements RepositoryInterface {
 
     public function delete(int $id): void {
         (new Post())->delete($id);
+    }
+
+    public function findBySlug(string $slug): array {
+        return (new Post())->findBySlug($slug);
+        
     }
 }
