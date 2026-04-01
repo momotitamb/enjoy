@@ -2,6 +2,11 @@
 
 class Router {
     private $routes = [];
+    private Container $container;
+
+    public function __construct(Container $container) {
+        $this->container = $container;
+    }
 
     public function get($uri, $handler) {
         $this->routes[] = ['GET', $uri, $handler];
@@ -30,7 +35,7 @@ class Router {
             $pattern = '#^' . preg_replace('/\{[a-z]+\}/', '(\d+)', $route[1]) . '$#';
             if ($method == $route[0] && preg_match($pattern, $url, $matches)) {                
                 [$class, $action] = ($route[2]);
-                $controller = new $class();
+                $controller = $this->container->make($class);
                 $controller->$action($matches[1]);
             }
         }
