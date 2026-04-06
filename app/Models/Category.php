@@ -40,4 +40,18 @@ class Category extends Model implements Sluggable {
         $stmt = $pdo->prepare("DELETE FROM categories WHERE id = ?");
         $stmt->execute([$id]);
     }
+
+    public function getPostsCount() {
+        $pdo = Database::getInstance();
+        $stmt = $pdo->prepare("SELECT
+            categories.*,
+            COUNT(posts.id) AS posts_count
+            FROM categories
+            LEFT JOIN posts ON categories.id = posts.category_id
+            GROUP BY categories.id
+        ");
+        $stmt->execute();
+        $posts_count = $stmt->fetchAll();
+        return $posts_count;
+    }
 }

@@ -65,4 +65,47 @@ class Post extends Model {
     public function getTableName(): string {
         return 'posts';
     }
+
+    public function allWithCategory() {
+        $pdo = Database::getInstance();
+        $stmt = $pdo->prepare("SELECT
+            p.*,
+            c.*
+            FROM posts p
+            LEFT JOIN categories c 
+            ON p.category_id = c.id
+        ");
+        $stmt->execute();
+        $posts = $stmt->fetchAll();
+        return $posts;
+    }
+
+    public function allWithAuthor() {
+        $pdo = Database::getInstance();
+        $stmt = $pdo->prepare("SELECT
+            posts.*,
+            users.name AS author
+            FROM posts
+            LEFT JOIN users
+            ON posts.user_id = users.id
+        ");
+        $stmt->execute();
+        $posts = $stmt->fetchAll();
+        return $posts;
+    }
+
+    public function allWithRelations() {
+        $pdo = Database::getInstance();
+        $stmt = $pdo->prepare("SELECT
+            p.*,
+            c.*,
+            u.name AS author
+            FROM posts p
+            LEFT JOIN categories c ON p.category_id = c.id
+            LEFT JOIN users u ON p.user_id = u.id
+        ");
+        $stmt->execute();
+        $posts = $stmt->fetchAll();
+        return $posts;
+    }
 }
