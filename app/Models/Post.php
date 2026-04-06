@@ -1,7 +1,11 @@
 <?php
 
 
-class Post {
+class Post extends Model {
+    use TimestampableTrait;
+    public const STATUS_DRAFT = 'draft';    
+    public const STATUS_PUBLISHED = 'published';    
+
     public function all() {
         $pdo = Database::getInstance();
         $stmt = $pdo->prepare("SELECT * FROM posts ORDER BY id DESC");
@@ -28,8 +32,8 @@ class Post {
 
     public function create($title, $slug, $content) {
         $pdo = Database::getInstance();
-        $stmt = $pdo->prepare("INSERT INTO posts (title, slug, content) VALUES (?, ?, ?)");
-        $stmt->execute([$title, $slug, $content]);
+        $stmt = $pdo->prepare("INSERT INTO posts (title, slug, content, status) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$title, $slug, $content, self::STATUS_DRAFT]);
     }
 
     public function update($title, $slug, $content, $id) {
@@ -42,5 +46,23 @@ class Post {
         $pdo = Database::getInstance();
         $stmt = $pdo->prepare("DELETE FROM posts WHERE id = ?");
         $stmt->execute([$id]);
+    }
+
+    public function getCategory($postId) {
+        $pdo = Database::getInstance();
+        $stmt = $pdo->prepare("SELECT 
+            c.*
+            FROM posts p
+            JOIN categories c 
+            ON p.category_id = c.id  
+            WHERE p.id = ?
+        ");
+        $stmt->execute([$postId]);
+        $category = $stmt->fetch();
+        return $category;
+    }
+
+    public function getTableName(): string {
+        return 'posts';
     }
 }

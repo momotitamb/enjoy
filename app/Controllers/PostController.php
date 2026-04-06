@@ -2,12 +2,13 @@
 
 class PostController extends Controller {
     private PostRepositoryInterface $repo;
+    use LoggableTrait;
 
     public function __construct(PostRepositoryInterface $repo) {
         $this->repo = $repo;
     }
 
-    public function index() {
+    public function index(): void {
         $posts = $this->repo->getAll();
         $this->render('posts/index', ['posts' => $posts]);
     }    
@@ -31,6 +32,7 @@ class PostController extends Controller {
         $content = $_POST['content'];
         $slug = strtolower(str_replace(' ', '-', $title));
         $this->repo->create(['title' => $title, 'slug' => $slug, 'content' => $content]);
+        $this->log('Post created');
         header('Location: /');
         exit();
     }
