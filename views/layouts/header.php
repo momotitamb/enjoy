@@ -9,8 +9,8 @@
 <body>
     <div class="container">
         <nav>
-            <a href="/">Главная</a>
-            <a href="/posts/create">Создать пост</a>
+            <a href="/" class="<?= $_SERVER['REQUEST_URI'] === '/' ? 'active' : '' ?>">Главная</a>
+            <a href="/categories" class="<?= str_starts_with($_SERVER['REQUEST_URI'], '/categories') ? 'active' : '' ?>">Категории</a>
         </nav>
     </div>
 

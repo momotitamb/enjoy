@@ -31,8 +31,14 @@ nav a {
     transition: color 0.2s;
 }
 
+
 nav a:hover {
     color: #ffffff;
+}
+
+nav a.active {
+    color: #ffffff;
+    border-bottom: 2px solid #6c8ebf;
 }
 
 .container {
