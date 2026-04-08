@@ -8,10 +8,23 @@
 </head>
 <body>
     <div class="container">
+
         <nav>
             <a href="/" class="<?= $_SERVER['REQUEST_URI'] === '/' ? 'active' : '' ?>">Главная</a>
             <a href="/categories" class="<?= str_starts_with($_SERVER['REQUEST_URI'], '/categories') ? 'active' : '' ?>">Категории</a>
+            
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <a href="/posts/create">Новый пост</a>
+
+                <form action="/logout" method="POST" class="inline">
+                    <button type="submit" class="btn-link">Выйти</button>
+                </form>
+            <?php else: ?>
+                <a href="/login">Войти</a>
+                <a href="/register">Регистрация</a>
+            <?php endif; ?>
         </nav>
+
     </div>
 
     <main>

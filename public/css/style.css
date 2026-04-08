@@ -64,7 +64,7 @@ h2 {
     color: #ffffff;
 }
 
-.post-card {
+.post-card, .card {
     background-color: #1a1a1a;
     border: 1px solid #2a2a2a;
     border-radius: 8px;
@@ -127,6 +127,19 @@ a.btn, button.btn {
     color: #ffffff;
 }
 
+.btn-link {
+    background: none;
+    border: none;
+    color: #a0a0a0;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 0;
+}
+
+.btn-link:hover {
+    color: #ffffff;
+}
+
 form.inline {
     display: inline;
 }
@@ -138,7 +151,7 @@ label {
     font-size: 14px;
 }
 
-input[type="text"], textarea {
+input[type="text"], input[type="email"], input[type="password"], textarea {
     width: 100%;
     background-color: #1a1a1a;
     border: 1px solid #2a2a2a;

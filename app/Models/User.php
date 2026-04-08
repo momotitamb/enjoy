@@ -26,10 +26,18 @@ class User extends Model {
         return $user;
     }
 
-    public function create($name, $email) {
+    public function findByEmail($email) {
         $pdo = Database::getInstance();
-        $stmt = $pdo->prepare("INSERT INTO users (name, email) VALUES (?, ?)");
-        $stmt->execute([$name, $email]);
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
+        $stmt->execute([$email]);
+        $user = $stmt->fetch();
+        return $user;
+    }
+
+    public function create($name, $email, $password) {
+        $pdo = Database::getInstance();
+        $stmt = $pdo->prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
+        $stmt->execute([$name, $email, $password]);
     }
 
     public function delete($id) {

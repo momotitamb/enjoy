@@ -6,5 +6,11 @@ abstract class Controller {
         require __DIR__ . "/../../views/{$view}.php";
     }
 
-    abstract public function index(): void;
+    public function auth() {
+        session_start();
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: /login');
+            exit();
+        }
+    }
 }

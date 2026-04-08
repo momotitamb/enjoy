@@ -28,11 +28,13 @@ class PostController extends Controller {
     }
 
     public function create() {
+        $this->auth();
         $categories = (new Category())->all();
         $this->render('posts/create', ['categories' => $categories]);
     }
 
-    public function store() {        
+    public function store() { 
+        $this->auth();     
         $title = $_POST['title'];
         $content = $_POST['content'];
         $category_id = $_POST['category_id'];
@@ -44,11 +46,13 @@ class PostController extends Controller {
     }
 
     public function edit($id) {
+        $this->auth();
         $post = $this->repo->findById($id);
         $this->render('posts/edit', ['post' => $post]);
     }
 
     public function update($id) {
+        $this->auth();
         $title = $_POST['title'];
         $content = $_POST['content'];
         $slug = strtolower(str_replace(' ', '-', $title));
@@ -58,6 +62,7 @@ class PostController extends Controller {
     }
 
     public function destroy($id) {
+        $this->auth();
         $this->repo->delete($id);
         header('Location: /');
         exit();
