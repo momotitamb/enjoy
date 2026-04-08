@@ -27,6 +27,7 @@ class CategoryController extends Controller {
         header('Location: /categories');
         exit();
     }
+    
     public function destroy($id) {
         $this->category->delete($id);
         header('Location: /');

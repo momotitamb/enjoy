@@ -30,10 +30,10 @@ class Post extends Model {
         return $post;
     }
 
-    public function create($title, $slug, $content) {
+    public function create($title, $slug, $content, $category_id = null) {
         $pdo = Database::getInstance();
-        $stmt = $pdo->prepare("INSERT INTO posts (title, slug, content, status) VALUES (?, ?, ?, ?)");
-        $stmt->execute([$title, $slug, $content, self::STATUS_DRAFT]);
+        $stmt = $pdo->prepare("INSERT INTO posts (title, slug, content, status, category_id) VALUES (?, ?, ?, ?, ?)");
+        $stmt->execute([$title, $slug, $content, self::STATUS_DRAFT, $category_id]);
     }
 
     public function update($title, $slug, $content, $id) {
@@ -66,15 +66,21 @@ class Post extends Model {
         return 'posts';
     }
 
-    public function allWithCategory() {
+    public function allWithCategory($page = 1, $perPage = 5) {
+        $offset = ($page - 1) * $perPage;
         $pdo = Database::getInstance();
         $stmt = $pdo->prepare("SELECT
             p.*,
-            c.*
+            c.name AS category_name
             FROM posts p
             LEFT JOIN categories c 
             ON p.category_id = c.id
+            ORDER BY p.id DESC
+            LIMIT ? OFFSET ?
         ");
+        // $stmt->execute([(int)$perPage, (int)$offset]);
+        $stmt->bindValue(1, (int)$perPage, PDO::PARAM_INT);
+        $stmt->bindValue(2, (int)$offset, PDO::PARAM_INT);
         $stmt->execute();
         $posts = $stmt->fetchAll();
         return $posts;
@@ -107,5 +113,12 @@ class Post extends Model {
         $stmt->execute();
         $posts = $stmt->fetchAll();
         return $posts;
+    }
+
+    public function count() {
+        $pdo = Database::getInstance();
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM posts");
+        $stmt->execute();
+        return $stmt->fetchColumn();
     }
 }

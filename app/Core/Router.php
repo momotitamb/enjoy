@@ -25,7 +25,7 @@ class Router {
     }
 
     public function dispatch() {
-        $url = $_SERVER['REQUEST_URI'];
+        $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         $method = $_SERVER['REQUEST_METHOD'];
         if ($method === 'POST' && isset($_POST['_method'])) {
             $method = $_POST['_method'];

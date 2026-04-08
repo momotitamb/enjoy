@@ -151,6 +151,22 @@ input[type="text"], textarea {
     transition: border-color 0.2s;
 }
 
+select {
+    width: 100%;
+    background-color: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 6px;
+    padding: 10px 14px;
+    color: #e0e0e0;
+    font-size: 15px;
+    margin-bottom: 16px;
+    outline: none;
+}
+
+select:focus {
+    border-color: #6c8ebf;
+}
+
 input[type="text"]:focus, textarea:focus {
     border-color: #6c8ebf;
 }
@@ -158,4 +174,11 @@ input[type="text"]:focus, textarea:focus {
 textarea {
     min-height: 160px;
     resize: vertical;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 24px;
 }

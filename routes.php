@@ -4,7 +4,7 @@ $router->get('/posts/create', [PostController::class, 'create']);
 $router->get('/categories/create', [CategoryController::class, 'create']);
 $router->get('/posts/{id}/edit', [PostController::class, 'edit']);
 $router->get('/posts/slug/{slug}', [PostController::class, 'showBySlug']);
-$router->get('/', [HomeController::class, 'index']);
+$router->get('/', [PostController::class, 'index']);
 $router->get('/about', function() { echo 'About page'; });
 $router->get('/posts', [PostController::class, 'index']);
 $router->get('/categories', [CategoryController::class, 'index']);

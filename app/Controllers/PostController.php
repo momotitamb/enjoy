@@ -9,8 +9,12 @@ class PostController extends Controller {
     }
 
     public function index(): void {
-        $posts = $this->repo->getAll();
-        $this->render('posts/index', ['posts' => $posts]);
+        $page = $_GET['page'] ?? 1;
+        $perPage = 5;
+        $total = (new Post())->count();
+        $totalPages = ceil($total / $perPage);
+        $posts = $this->repo->getAllWithCategory($page, $perPage);
+        $this->render('posts/index', ['posts' => $posts, 'totalPages' => $totalPages, 'page' => $page]);
     }    
 
     public function show($id) {
@@ -24,14 +28,16 @@ class PostController extends Controller {
     }
 
     public function create() {
-        $this->render('posts/create');
+        $categories = (new Category())->all();
+        $this->render('posts/create', ['categories' => $categories]);
     }
 
-    public function store() {
+    public function store() {        
         $title = $_POST['title'];
         $content = $_POST['content'];
+        $category_id = $_POST['category_id'];
         $slug = strtolower(str_replace(' ', '-', $title));
-        $this->repo->create(['title' => $title, 'slug' => $slug, 'content' => $content]);
+        $this->repo->create(['title' => $title, 'slug' => $slug, 'content' => $content, 'category_id' => $category_id]);
         $this->log('Post created');
         header('Location: /');
         exit();
@@ -55,6 +61,5 @@ class PostController extends Controller {
         $this->repo->delete($id);
         header('Location: /');
         exit();
-    }
-    
+    }    
 }

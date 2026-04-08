@@ -1,6 +1,7 @@
 <?php
 
 class PostRepository implements PostRepositoryInterface {
+
     public function getAll(): array {
         return (new Post())->all();
     }
@@ -10,7 +11,7 @@ class PostRepository implements PostRepositoryInterface {
     }
 
     public function create(array $data): void {
-        (new Post())->create($data['title'], $data['slug'], $data['content']);
+        (new Post())->create($data['title'], $data['slug'], $data['content'], $data['category_id']);
     }
 
     public function update(int $id, array $data): void {
@@ -22,7 +23,10 @@ class PostRepository implements PostRepositoryInterface {
     }
 
     public function findBySlug(string $slug): array {
-        return (new Post())->findBySlug($slug);
-        
+        return (new Post())->findBySlug($slug);        
+    }
+
+    public function getAllWithCategory($page, $perPage): array {
+        return (new Post())->allWithCategory($page, $perPage);
     }
 }
