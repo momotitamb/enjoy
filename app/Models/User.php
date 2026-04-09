@@ -10,7 +10,7 @@ class User extends Model {
         return 'users';
     }
 
-    public function  all() {
+    public function all() {
         $pdo = Database::getInstance();
         $stmt = $pdo->prepare("SELECT * FROM users");
         $stmt->execute();
@@ -38,6 +38,12 @@ class User extends Model {
         $pdo = Database::getInstance();
         $stmt = $pdo->prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
         $stmt->execute([$name, $email, $password]);
+    }
+
+    public function update($name, $email, $id) {
+        $pdo = Database::getInstance();
+        $stmt = $pdo->prepare("UPDATE users SET name = ?, email = ? WHERE id = ?");
+        $stmt->execute([$name, $email, $id]);
     }
 
     public function delete($id) {

@@ -18,9 +18,10 @@ class AuthController extends Controller {
             exit();
         }
 
-        session_start();
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['user_email'] = $user['email'];
+        $_SESSION['user_name'] = $user['name'];
+        $_SESSION['user_role'] = $user['role'];
 
         header('Location: /');
         exit();
@@ -49,7 +50,6 @@ class AuthController extends Controller {
     }
 
     public function logout() {
-        session_start();
         session_destroy();
 
         header('Location: /login');

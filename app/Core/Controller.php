@@ -7,9 +7,15 @@ abstract class Controller {
     }
 
     public function auth() {
-        session_start();
         if (!isset($_SESSION['user_id'])) {
             header('Location: /login');
+            exit();
+        }
+    }
+
+    public function adminOnly() {
+        if ($_SESSION['user_role'] !== 'admin') {
+            header('Location: /');
             exit();
         }
     }

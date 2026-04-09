@@ -16,13 +16,14 @@ A PHP CMS built from scratch without frameworks as a learning project. Pure OOP 
 - After each difficult topic — give practice task
 - Student communicates in Russian
 - Do NOT touch code without being explicitly asked
-- Do NOT commit without student request
+- Remind student to commit regularly at logical checkpoints
 - Do NOT ask "покажи что сделал" — read files yourself
 - If explanation doesn't work — change approach, don't repeat the same thing
 - Always explain new terms immediately (bind, factory, type hint, callable etc.)
 - Break complex topics into small steps with verification of each
 - Before starting any new topic — explain the theory: what it is, why it's needed, where it's used
-- Periodically give practice tasks to reinforce topics covered
+- Periodically give practice tasks to reinforce topics covered — do this frequently
+- Do NOT show ready code solutions unless student explicitly asks
 
 ## Tech Stack
 - PHP 8+ (no frameworks)
@@ -34,7 +35,7 @@ A PHP CMS built from scratch without frameworks as a learning project. Pure OOP 
 ## Project Structure
 ```
 app/
-  Controllers/   — PostController, AuthController (in progress)
+  Controllers/   — PostController, AuthController, UserController
   Core/          — Router, Database, Controller, Container, Model, QueryBuilder, Sluggable
   Core/Traits/   — LoggableTrait, TimestampableTrait
   Models/        — Post, Category, User
@@ -44,11 +45,12 @@ views/
   layouts/       — header.php, footer.php
   posts/         — index, show, create, edit, slug
   categories/    — index.php, create.php
-  auth/          — (to be created: login.php, register.php)
+  auth/          — login.php, register.php
+  users/         — index.php, show.php, edit.php (in progress)
 config/
   database.php   — DB credentials (not in git)
 public/
-  index.php      — entry point
+  index.php      — entry point (session_start() here)
   css/style.css
 autoload.php     — spl_autoload_register (Core, Core/Traits, Controllers, Models, Services, Repositories)
 bootstrap.php    — Container bindings (PostController only)
@@ -58,7 +60,7 @@ routes.php       — all routes
 ## Database Tables
 - `posts` — id, title, slug, content, status (draft/published), category_id, user_id, created_at
 - `categories` — id, name, slug, created_at
-- `users` — id, name, email, password (VARCHAR 255), created_at
+- `users` — id, name, email, password (VARCHAR 255), role (user/admin), created_at
 - Foreign keys: posts.category_id → categories.id, posts.user_id → users.id
 
 ## What's Been Implemented
@@ -67,10 +69,11 @@ routes.php       — all routes
 - Singleton Database class with PDO
 - Router with dynamic params {id}, {slug}, HTTP method spoofing (_method)
 - Router fix: parse_url() to strip query string before matching
-- Abstract Controller with render() and extract() for templates
+- Abstract Controller with render(), auth(), adminOnly()
 - Layout system (header/footer) with active nav links
 - spl_autoload_register autoloader (includes Core/Traits)
 - Service Container with bind()/make() for Dependency Injection
+- session_start() in public/index.php (global, runs on every request)
 
 ### OOP Concepts Covered
 - Abstract classes (Model base class with getTableName())
@@ -82,77 +85,83 @@ routes.php       — all routes
 - Repository pattern (PostRepository)
 - Dependency Injection (controllers receive repo via constructor)
 
+### Authentication (COMPLETED)
+- AuthController — loginForm(), login(), registerForm(), register(), logout()
+- Sessions ($_SESSION) — user_id, user_email, user_name, user_role
+- password_hash() / password_verify()
+- Route protection — auth() for logged-in users, adminOnly() for admins
+- Views: auth/login.php, auth/register.php
+- Nav: shows user name with dropdown logout, login/register links when guest
+
 ### Models
 - Post — all(), find(), findBySlug(), create(), update(), delete(), getCategory(),
-  allWithCategory($page=1, $perPage=5) with LIMIT/OFFSET pagination,
-  allWithAuthor(), allWithRelations(), count()
+  allWithCategory($page, $perPage), allWithAuthor(), allWithRelations(), count()
 - Category — all(), find(), create(), delete(), generateSlug(), getPostsCount()
-- User — all(), find(), create(), delete(), getPostsCount()
+- User — all(), find(), findByEmail(), create($name,$email,$password), update($name,$email,$id),
+  delete(), getPostsCount()
 
 ### SQL
 - CRUD with prepared statements
 - JOIN queries (INNER JOIN, LEFT JOIN)
 - Aggregate functions (COUNT, GROUP BY)
-- Pagination with LIMIT/OFFSET (uses bindValue with PDO::PARAM_INT — important!)
+- Pagination with LIMIT/OFFSET (bindValue with PDO::PARAM_INT)
 - QueryBuilder class — select(), where(), orderBy(), get()
 
 ### Frontend
 - Full CRUD for posts (index, show, create, edit, delete)
 - Category pages (index with delete, create form)
-- Category dropdown in post create form
-- Pagination with page numbers and prev/next buttons
-- Dark theme CSS with active nav links
+- User pages — index.php done, show.php and edit.php in progress
+- Pagination with page numbers and prev/next
+- Dark theme CSS — .post-card, .card, .btn-link, .user-menu dropdown
 - Forms with PUT/DELETE method spoofing
+- Nav: user dropdown (name → logout on hover), auth links for guests
 
 ### Controllers
-- PostController — full CRUD, uses PostRepositoryInterface via DI
-- CategoryController — index, create, store, destroy (uses Category model directly, no repository)
-- HomeController — DELETED, replaced by PostController::index() on route /
+- PostController — full CRUD, auth() on write methods, uses PostRepositoryInterface via DI
+- CategoryController — index, create, store, destroy (uses Category model directly)
+- AuthController — login/register/logout, sessions, password hashing
+- UserController — index(auth), show(auth), edit(adminOnly), update(adminOnly), destroy(adminOnly)
 
 ## What's Left To Do
 
 ### IN PROGRESS
-- [ ] AuthController — structure created, needs implementation:
-  - loginForm(), login(), registerForm(), register(), logout()
-  - Sessions ($_SESSION)
-  - password_hash() / password_verify()
-  - Route protection (only logged in users can create/edit/delete posts)
-  - Add routes to routes.php
-  - Create views: auth/login.php, auth/register.php
+- [ ] UserController views — fix show.php (remove form, display only), create edit.php
+- [ ] Users nav link — show only for logged-in users
+- [ ] Fix users/index.php — add show link, wrap delete in admin check, fix CSS class
 
 ### Project Completion
-- [ ] Authentication (see above)
+- [ ] При создании поста записывать user_id из сессии в posts.user_id
 - [ ] Write README.md for GitHub
 - [ ] Push to GitHub as portfolio project
-- [ ] Integrate QueryBuilder into models (optional, replace raw SQL)
-- [ ] Add SQL injection protection to QueryBuilder (placeholders)
+- [ ] Integrate QueryBuilder into models (optional)
+- [ ] Add SQL injection protection to QueryBuilder
 - [ ] Add join() method to QueryBuilder
 
-### Topics To Revisit (Marked Difficult)
+### Topics To Revisit
 - [ ] Container, make(), DI — review with Laravel comparison
-- [ ] __get, __set, __toString — practical implementation postponed
+- [ ] __get, __set, __toString — postponed
 - [ ] Caching and logging in pure PHP
 
-### Week 4 Plan (Postponed)
-- [ ] Algorithms in PHP (bubble sort, binary search, recursion)
+### After Project (Job Prep)
+- [ ] Algorithms in PHP (bubble sort, binary search, recursion) — algorithms.php exists
 - [ ] Git workflow (branches, merge, conflicts)
 - [ ] Typical interview questions
 - [ ] Return to renamer and maze.php tasks
-- [ ] Linux basics (student asked about this)
-
-### Week 3 (Remaining)
+- [ ] Linux basics
 - [ ] See how Repository/DI/Container are implemented in Laravel
 
 ## Important Technical Notes
-- PDO + LIMIT/OFFSET: must use bindValue($pos, $val, PDO::PARAM_INT) not execute([]) — strings cause SQL error
-- CategoryController has no repository — uses Category model directly (simpler approach)
-- AuthController should NOT be registered in Container (simple constructor, no DI needed)
-- config/database.php is in .gitignore (contains credentials)
+- PDO + LIMIT/OFFSET: must use bindValue($pos, $val, PDO::PARAM_INT)
+- session_start() only in public/index.php — do NOT add it anywhere else
+- CategoryController has no repository — uses Category model directly
+- AuthController NOT registered in Container (no DI needed)
+- config/database.php is in .gitignore
 - QueryBuilder needs SQL injection protection before production use
-- Users table has 8 seeded users with password '1111' (hashed with password_hash)
-- MySQL accessible via phpMyAdmin at http://localhost/phpmyadmin (not terminal on Windows/XAMPP)
+- Users table has seeded users with password '1111' (hashed), id=1 is admin (John Doe)
+- MySQL via phpMyAdmin at http://localhost/phpmyadmin
+- User roles: 'user' (default), 'admin' — stored as string in DB, checked via $_SESSION['user_role'] === 'admin'
 
 ## Difficult Topics (Need Extra Attention)
-- Container, DI, make() — student found difficult, needs review with Laravel comparison
-- Magic methods __get, __set, __toString — postponed, needs practical examples
+- Container, DI, make() — student found difficult
+- Magic methods __get, __set, __toString — postponed
 - Any new syntax must be explained immediately with full context
