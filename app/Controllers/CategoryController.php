@@ -16,10 +16,12 @@ class CategoryController extends Controller {
     }    
 
     public function create() {
+        $this->auth();
         $this->render('categories/create');
     }
 
     public function store() {
+        $this->auth();
         $name = $_POST['name'];
         $slug = strtolower(str_replace(' ', '-', $name));
         $this->category->create($name, $slug);
@@ -29,6 +31,7 @@ class CategoryController extends Controller {
     }
     
     public function destroy($id) {
+        $this->auth();
         $this->category->delete($id);
         header('Location: /');
         exit();

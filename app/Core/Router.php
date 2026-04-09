@@ -40,7 +40,7 @@ class Router {
             if ($method == $route[0] && preg_match($pattern, $url, $matches)) {                
                 [$class, $action] = ($route[2]);
                 $controller = $this->container->make($class);
-                $controller->$action($matches[1]);
+                $controller->$action(isset($matches[1])) ? $matches[1] : null;
             }
         }
     }

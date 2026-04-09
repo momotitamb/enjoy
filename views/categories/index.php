@@ -1,26 +1,35 @@
 <?php
 
 require_once __DIR__ . '/../layouts/header.php'; ?>
+
+    <?php if (isset($_SESSION['user_id'])): ?>
+        <div style="margin-bottom: 20px;">
+            <a href="categories/create" class="btn btn-primary">+ Создать категорию</a>
+        </div>
+    <?php endif; ?>
     
-    <a href="categories/create" class="btn btn-primary">Создать категорию</a>
-    <?php foreach ($categories as $category) { ?>
-        <div class="post-card">
 
-           <?php echo $category['name'] . '<br>'; ?>
+    <?php foreach ($categories as $category): ?>
+        <div class="card">
+
+           <strong><?php echo $category['name'] . '<br>'; ?></strong>
             
-            <div class="post-action">
+            <div class="post-actions">
 
-                <form class="inline" action="/categories/<?= $category['id'] ?>" method="POST">
-                    <input type="hidden" name="_method" value="DELETE">
-                    <button type="submit" class="btn btn-danger">Удалить</button><br>
-                </form> 
+                <?php if (isset($_SESSION['user_id'])): ?>
+
+                    <form class="inline" action="/categories/<?= $category['id'] ?>" method="POST">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit" class="btn btn-danger">Удалить</button><br>
+                    </form>
+                <?php endif; ?>
                 
             </div>            
 
         </div>       
 
 
-    <?php }
+    <?php endforeach;
 
     
 

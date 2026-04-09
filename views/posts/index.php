@@ -2,29 +2,37 @@
 
 require_once __DIR__ . '/../layouts/header.php'; ?>
 
-    <div style="margin-bottom: 20px;">
-        <a href="/posts/create" class="btn btn-primary">+ Создать пост</a>
-    </div>
+    <?php if (isset($_SESSION['user_id'])): ?>
+        <div style="margin-bottom: 20px;">
+            <a href="/posts/create" class="btn btn-primary">+ Создать пост</a>
+        </div>
+    <?php endif; ?>
     
-    <?php foreach ($posts as $post) { ?>
+    <?php foreach ($posts as $post): ?>
         <div class="post-card">
-
-           <?php echo $post['title'] . '<br>'; ?>
-           <?php echo $post['category_name'] ?? 'Без категории'; ?>
-            <br><br>
-            <a href="/posts/<?= $post['id'] ?>/edit" class="btn btn-secondary">Редактировать</a><br>
             
-            <div class="post-action">
-                <form class="inline" action="/posts/<?= $post['id'] ?>" method="POST">
-                    <input type="hidden" name="_method" value="DELETE">
-                    <button type="submit" class="btn btn-danger">Удалить</button><br>
-                </form> 
+            <strong><?php echo $post['title'] . '<br>'; ?></strong>
+            <?php echo $post['category_name'] ?? 'Без категории'; ?>
+            <br>
+
+            <div class="post-actions">
+                <a href="/posts/<?= $post['id'] ?>/show" class="btn btn-secondary">Просмотр</a>
+                
+                <?php if (isset($_SESSION['user_id'])): ?>
+
+                    <a href="/posts/<?= $post['id'] ?>/edit" class="btn btn-secondary">Редактировать</a>
+                    <form class="inline" action="/posts/<?= $post['id'] ?>" method="POST" class="inline">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit" class="btn btn-danger">Удалить</button>
+                    </form> 
+
+                <?php endif; ?>
             </div>            
 
         </div>       
 
 
-    <?php } ?>
+    <?php endforeach; ?>
 
     <div class="pagination">
         <?php if ($page > 1): ?>
@@ -43,6 +51,7 @@ require_once __DIR__ . '/../layouts/header.php'; ?>
     </div>
 
 <?php
+
 require_once __DIR__ . '/../layouts/footer.php';
 
 
