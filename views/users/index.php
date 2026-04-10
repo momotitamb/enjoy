@@ -10,26 +10,26 @@ require_once __DIR__ . '/../layouts/header.php'; ?>
 
         <div class="card">
 
-            <strong><?php echo $user['name'] . '<br>'; ?></strong>
-            
+            <div class="card-title">
+                <strong><?php echo $user['name']; ?></strong>
+            </div>
+
             <div class="post-actions">
                 
-                <a href="/users/<?= $user['id'] ?>/show" class="btn btn-secondary">Просмотр</a>                
+                <a href="/users/<?= $user['id'] ?>/show" class="btn btn-secondary">Просмотр</a>            
 
                 <?php if ($_SESSION['user_role'] === 'admin'): ?>
-                    <a href="/posts/<?= $user['id'] ?>/edit" class="btn btn-secondary">Редактировать</a><br> 
+                    <a href="/users/<?= $user['id'] ?>/edit" class="btn btn-secondary">Редактировать</a>
                     <form class="inline" action="/users/<?= $user['id'] ?>" method="POST">
                         <input type="hidden" name="_method" value="DELETE">
-                        <button type="submit" class="btn btn-danger">Удалить</button><br>
+                        <button type="submit" class="btn btn-danger">Удалить</button>
                     </form> 
                 <?php endif; ?>              
 
             </div>
         </div>       
 
-    <?php endforeach; ?>
-
-    
+    <?php endforeach;   
 
 
 require_once __DIR__ . '/../layouts/footer.php';

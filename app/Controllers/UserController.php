@@ -27,14 +27,14 @@ class UserController extends Controller {
 
         (new User())->update($name, $email, $id);
 
-        header('Location: /');
+        header('Location: /users');
         exit();
     }
     
     public function destroy($id) {
         $this->adminOnly();
         (new User())->delete($id);
-        header('Location: /');
+        header('Location: /users');
         exit();
     }    
 }

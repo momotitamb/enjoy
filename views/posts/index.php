@@ -10,10 +10,12 @@ require_once __DIR__ . '/../layouts/header.php'; ?>
     
     <?php foreach ($posts as $post): ?>
         <div class="post-card">
-            
-            <strong><?php echo $post['title'] . '<br>'; ?></strong>
-            <?php echo $post['category_name'] ?? 'Без категории'; ?>
-            <br>
+            <div class="card-title">
+                <strong><?php echo $post['title']?></strong>
+                <br>
+                <?php echo $post['category_name'] ?? 'Без категории'; ?>
+                <br>
+            </div>
 
             <div class="post-actions">
                 <a href="/posts/<?= $post['id'] ?>/show" class="btn btn-secondary">Просмотр</a>

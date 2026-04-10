@@ -9,7 +9,7 @@ require_once __DIR__ . '/../layouts/header.php';
 
         <form action="/posts" method="POST">
             <label>Заголовок</label>
-            <input type="text" name="title" id="title"><br>
+            <input type="text" name="title" id="title">
             
             <label>Содержание</label>
             <textarea name="content" id="content"></textarea>

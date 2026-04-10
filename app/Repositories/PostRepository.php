@@ -6,12 +6,12 @@ class PostRepository implements PostRepositoryInterface {
         return (new Post())->all();
     }
 
-    public function findById(int $id): array {
+    public function findById(int $id): array|false {
         return (new Post())->find($id);
     }
 
     public function create(array $data): void {
-        (new Post())->create($data['title'], $data['slug'], $data['content'], $data['category_id']);
+        (new Post())->create($data['title'], $data['slug'], $data['content'], $data['user_id'], $data['category_id']);
     }
 
     public function update(int $id, array $data): void {
@@ -22,7 +22,7 @@ class PostRepository implements PostRepositoryInterface {
         (new Post())->delete($id);
     }
 
-    public function findBySlug(string $slug): array {
+    public function findBySlug(string $slug): array|false {
         return (new Post())->findBySlug($slug);        
     }
 

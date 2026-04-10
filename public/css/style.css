@@ -97,6 +97,7 @@ a.btn, button.btn {
     text-decoration: none;
     border: none;
     transition: background-color 0.2s;
+    line-height: 1.4;
 }
 
 .btn-primary {
@@ -226,5 +227,11 @@ textarea {
 .detail-label {
     color: #a0a0a0;
     min-width: 120px;
+}
+
+.card-title {
+    display: block;
+    margin-left: 10px;
+    margin-bottom: 4px;
 }
 

@@ -30,10 +30,10 @@ class Post extends Model {
         return $post;
     }
 
-    public function create($title, $slug, $content, $category_id = null) {
+    public function create($title, $slug, $content, $user_id, $category_id = null) {
         $pdo = Database::getInstance();
-        $stmt = $pdo->prepare("INSERT INTO posts (title, slug, content, status, category_id) VALUES (?, ?, ?, ?, ?)");
-        $stmt->execute([$title, $slug, $content, self::STATUS_DRAFT, $category_id]);
+        $stmt = $pdo->prepare("INSERT INTO posts (title, slug, content, status, category_id, user_id) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$title, $slug, $content, self::STATUS_DRAFT, $category_id, $user_id]);
     }
 
     public function update($title, $slug, $content, $id) {

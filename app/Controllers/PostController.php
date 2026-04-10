@@ -18,7 +18,11 @@ class PostController extends Controller {
     }    
 
     public function show($id) {
-        $post = $this->repo->findById($id);
+        $post = $this->repo->findById($id);        
+        if ($post === false) {
+            header('Location: /');
+            exit();
+        }
         $this->render('posts/show', ['post' => $post]);
     }
 
@@ -38,9 +42,13 @@ class PostController extends Controller {
         $title = $_POST['title'];
         $content = $_POST['content'];
         $category_id = $_POST['category_id'];
+        $user_id = $_SESSION['user_id'];
         $slug = strtolower(str_replace(' ', '-', $title));
-        $this->repo->create(['title' => $title, 'slug' => $slug, 'content' => $content, 'category_id' => $category_id]);
+
+        $this->repo->create(['title' => $title, 'slug' => $slug, 'content' => $content, 
+        'category_id' => $category_id, 'user_id' => $user_id]);
         $this->log('Post created');
+
         header('Location: /');
         exit();
     }
