@@ -23,7 +23,9 @@ require_once __DIR__ . '/../layouts/header.php'; ?>
                 <?php if (isset($_SESSION['user_id'])): ?>
 
                     <a href="/posts/<?= $post['id'] ?>/edit" class="btn btn-secondary">Редактировать</a>
+
                     <form class="inline" action="/posts/<?= $post['id'] ?>" method="POST" class="inline">
+                        <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
                         <input type="hidden" name="_method" value="DELETE">
                         <button type="submit" class="btn btn-danger">Удалить</button>
                     </form> 

@@ -13,6 +13,7 @@ class PostController extends Controller {
         $perPage = 5;
         $total = (new Post())->count();
         $totalPages = ceil($total / $perPage);
+        
         $posts = $this->repo->getAllWithCategory($page, $perPage);
         $this->render('posts/index', ['posts' => $posts, 'totalPages' => $totalPages, 'page' => $page]);
     }    
@@ -38,7 +39,12 @@ class PostController extends Controller {
     }
 
     public function store() { 
-        $this->auth();     
+        $this->auth();
+        if (!$this->verifyCsrfToken()) {
+            header('Location: /');
+            exit();
+        }
+
         $title = $_POST['title'];
         $content = $_POST['content'];
         $category_id = $_POST['category_id'];
@@ -61,17 +67,29 @@ class PostController extends Controller {
 
     public function update($id) {
         $this->auth();
+        if (!$this->verifyCsrfToken()) {
+            header('Location: /');
+            exit();
+        }
+
         $title = $_POST['title'];
         $content = $_POST['content'];
         $slug = strtolower(str_replace(' ', '-', $title));
+
         $this->repo->update($id, ['title' => $title, 'slug' => $slug, 'content' => $content]);
+
         header('Location: /');
         exit();
     }
 
     public function destroy($id) {
         $this->auth();
+        if (!$this->verifyCsrfToken()) {
+            header('Location: /');
+            exit();
+        }
         $this->repo->delete($id);
+
         header('Location: /');
         exit();
     }    

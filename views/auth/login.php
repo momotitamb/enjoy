@@ -9,10 +9,10 @@ require_once __DIR__ . '/../layouts/header.php';
 
         <form action="/login" method="POST">
             <label>Email:</label>
-            <input type="email" name="email" value="<?= htmlspecialchars($_POST['email']) ?>">
+            <input type="email" name="email">
             
             <label>Пароль:</label>
-            <input type="password" name="password" value="<?= htmlspecialchars($_POST['password']) ?>">
+            <input type="password" name="password">
             
             <div class="post-actions">
                 <button type="submit" class="btn btn-primary">Войти</button>

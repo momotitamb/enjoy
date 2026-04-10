@@ -22,6 +22,10 @@ class UserController extends Controller {
 
     public function update($id) {
         $this->adminOnly();
+        if (!$this->verifyCsrfToken()) {
+            header('Location: /');
+            exit();
+        }
         $name = $_POST['name'];
         $email = $_POST['email'];
 
@@ -33,6 +37,10 @@ class UserController extends Controller {
     
     public function destroy($id) {
         $this->adminOnly();
+        if (!$this->verifyCsrfToken()) {
+            header('Location: /');
+            exit();
+        }
         (new User())->delete($id);
         header('Location: /users');
         exit();

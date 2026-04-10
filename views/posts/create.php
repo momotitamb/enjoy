@@ -8,6 +8,7 @@ require_once __DIR__ . '/../layouts/header.php';
     <div class="post-card">
 
         <form action="/posts" method="POST">
+            <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
             <label>Заголовок</label>
             <input type="text" name="title" id="title">
             

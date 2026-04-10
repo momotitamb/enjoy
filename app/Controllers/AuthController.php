@@ -8,6 +8,10 @@ class AuthController extends Controller {
     }
 
     public function login() {
+        if (!$this->verifyCsrfToken()) {
+            header('Location: /');
+            exit();
+        }
         $email = $_POST['email'];
         $password = $_POST['password'];
 
@@ -18,6 +22,8 @@ class AuthController extends Controller {
             exit();
         }
 
+        session_regenerate_id(true);
+        
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['user_email'] = $user['email'];
         $_SESSION['user_name'] = $user['name'];
@@ -32,6 +38,11 @@ class AuthController extends Controller {
     }
 
     public function register() {
+        if (!$this->verifyCsrfToken()) {
+            header('Location: /');
+            exit();
+        }
+
         $name = $_POST['name'];
         $email = $_POST['email'];
         $password = $_POST['password'];

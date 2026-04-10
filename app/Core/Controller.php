@@ -19,4 +19,11 @@ abstract class Controller {
             exit();
         }
     }
+
+    public function verifyCsrfToken() {
+        if ($_SESSION['csrf_token'] !== $_POST['csrf_token']) {
+            return false;
+        }
+        return true;
+    }
 }

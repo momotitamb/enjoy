@@ -9,12 +9,13 @@ require_once __DIR__ . '/../layouts/header.php';
 
         <form action="/users/<?= $user['id'] ?>" method="POST">
             <input type="hidden" name="_method" value="PUT">
+            <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
 
             <label>Имя</label>
-            <input type="text" name="name" value="<?= htmlspecialchars($user['name']) ?>">
+            <input type="text" name="name" value="<?= htmlspecialchars($user['name'] ?? '') ?>">
             
             <label>Email</label>
-            <input type="email" name="email" value="<?= htmlspecialchars($user['email']) ?>">
+            <input type="email" name="email" value="<?= htmlspecialchars($user['email'] ?? '') ?>">
 
             <div class="post-actions">
                 <button type="submit" class="btn btn-primary">Сохранить</button>

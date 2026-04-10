@@ -10,16 +10,16 @@ require_once __DIR__ . '/../layouts/header.php';
         <form action="/register" method="POST">
 
             <label>Имя:</label>
-            <input type="text" name="name" value="<?= htmlspecialchars($_POST['name']) ?>">
+            <input type="text" name="name">
 
             <label>Email:</label>
-            <input type="email" name="email" value="<?= htmlspecialchars($_POST['email']) ?>">
+            <input type="email" name="email">
 
             <label>Пароль:</label>
-            <input type="password" name="password" value="<?= htmlspecialchars($_POST['password']) ?>">
+            <input type="password" name="password">
             
             <label>Подтверждение пароля:</label>
-            <input type="password" name="confirm_password" value="<?= htmlspecialchars($_POST['confirm_password']) ?>">
+            <input type="password" name="confirm_password">
             
             <div class="post-actions">
                 <button type="submit" class="btn btn-primary">Регистрация</button>
