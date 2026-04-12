@@ -45,6 +45,15 @@ class PostController extends Controller {
             exit();
         }
 
+        $validator = new Validator($_POST);
+        $validator->required('title')->required('content')->minLength('title', 2)->minLength('content', 7);
+
+        if ($validator->fails()) {
+            $this->setFlash('error', implode(', ', $validator->errors()));
+            header('Location: /');
+            exit();
+        }
+
         $title = $_POST['title'];
         $content = $_POST['content'];
         $category_id = $_POST['category_id'];
@@ -52,7 +61,8 @@ class PostController extends Controller {
         $slug = strtolower(str_replace(' ', '-', $title));
 
         $this->repo->create(['title' => $title, 'slug' => $slug, 'content' => $content, 
-        'category_id' => $category_id, 'user_id' => $user_id]);
+            'category_id' => $category_id, 'user_id' => $user_id]);
+        $this->setFlash('success', 'Пост создан!');
         $this->log('Post created');
 
         header('Location: /');
@@ -72,11 +82,21 @@ class PostController extends Controller {
             exit();
         }
 
+        $validator = new Validator($_POST);
+        $validator->required('title')->required('content')->minLength('title', 2)->minLength('content', 7);
+
+        if ($validator->fails()) {
+            $this->setFlash('error', implode(', ', $validator->errors()));
+            header('Location: /');
+            exit();
+        }
+
         $title = $_POST['title'];
         $content = $_POST['content'];
         $slug = strtolower(str_replace(' ', '-', $title));
 
         $this->repo->update($id, ['title' => $title, 'slug' => $slug, 'content' => $content]);
+        $this->setFlash('success', 'Пост обновлен!');
 
         header('Location: /');
         exit();
@@ -89,6 +109,7 @@ class PostController extends Controller {
             exit();
         }
         $this->repo->delete($id);
+        $this->setFlash('success', 'Пост удален!');
 
         header('Location: /');
         exit();

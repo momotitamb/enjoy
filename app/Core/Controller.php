@@ -26,4 +26,17 @@ abstract class Controller {
         }
         return true;
     }
+
+    public function setFlash(string $type, string $message) {
+        $_SESSION['flash'][$type] = $message;
+    }
+
+    public function getFlash($type) {
+        if (isset($_SESSION['flash'][$type])) {
+            $message = $_SESSION['flash'][$type];
+            unset($_SESSION['flash'][$type]);
+            return $message;
+        }
+        return '';
+    }
 }

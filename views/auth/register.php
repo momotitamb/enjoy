@@ -7,7 +7,7 @@ require_once __DIR__ . '/../layouts/header.php';
 
     <div class="card">
 
-        <form action="/register" method="POST">
+        <form action="/register" method="POST" autocomplete="off">
 
             <label>Имя:</label>
             <input type="text" name="name">

@@ -22,14 +22,26 @@ class UserController extends Controller {
 
     public function update($id) {
         $this->adminOnly();
+        
         if (!$this->verifyCsrfToken()) {
             header('Location: /');
             exit();
         }
+
+        $validator = new Validator($_POST);
+        $validator->required('name')->required('email')->email('email');
+
+        if ($validator->fails()) {
+            $this->setFlash('error', implode(', ', $validator->errors()));
+            header('Location: /users');
+            exit();
+        }
+
         $name = $_POST['name'];
         $email = $_POST['email'];
 
         (new User())->update($name, $email, $id);
+        $this->setFlash('success', 'Пользователь успешно обновлен!');
 
         header('Location: /users');
         exit();
@@ -41,7 +53,10 @@ class UserController extends Controller {
             header('Location: /');
             exit();
         }
+
         (new User())->delete($id);
+        $this->setFlash('success', 'Пользователь удален');
+
         header('Location: /users');
         exit();
     }    

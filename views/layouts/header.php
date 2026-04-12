@@ -39,7 +39,21 @@
                     <a href="/register">Регистрация</a>
                 <?php endif; ?>
             </div>            
-        </nav>
+        </nav>        
+                    
+        <?php if (isset($_SESSION['flash']['success'])): ?>
+            <div class="alert alert-success">
+                <?= $_SESSION['flash']['success'] ?>
+                <?php unset($_SESSION['flash']['success']) ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION['flash']['error'])): ?>
+            <div class="alert alert-error">
+                <?= $_SESSION['flash']['error'] ?>
+                <?php unset($_SESSION['flash']['error']) ?>
+            </div>
+        <?php endif; ?>
 
     </div>
 
