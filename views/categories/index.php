@@ -19,7 +19,7 @@ require_once __DIR__ . '/../layouts/header.php'; ?>
 
                 <?php if ($_SESSION['user_role'] === 'admin'): ?>
                     
-                    <form class="inline" action="/categories/<?= $category['id'] ?>" method="POST">
+                    <form class="inline" action="/categories/<?= $category['id'] ?>" method="POST" onsubmit="return confirm('Вы уверены?')">
                         <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
                         <input type="hidden" name="_method" value="DELETE">
                         <button type="submit" class="btn btn-danger">Удалить</button><br>

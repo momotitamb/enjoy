@@ -10,10 +10,10 @@ require_once __DIR__ . '/../layouts/header.php';
         <form action="/register" method="POST" autocomplete="off">
 
             <label>Имя:</label>
-            <input type="text" name="name">
+            <input type="text" name="name" value="<?= htmlspecialchars($_SESSION['old']['name'] ?? '') ?>">
 
             <label>Email:</label>
-            <input type="email" name="email">
+            <input type="email" name="email" value="<?= htmlspecialchars($_SESSION['old']['email'] ?? '') ?>">
 
             <label>Пароль:</label>
             <input type="password" name="password">

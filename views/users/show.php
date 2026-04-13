@@ -14,5 +14,11 @@ require_once __DIR__ . '/../layouts/header.php'; ?>
         <span class="detail-value"><?= $user['email'] ?></span>
     </div>
 
+    <?php if ($_SESSION['user_role'] === 'admin'): ?>
+        <div class="detail-row">
+            <span class="detail-label">Дата регистрации:</span>
+            <span class="detail-value"><?= date('d.m.Y', strtotime($user['created_at'])); ?></span>
+        </div>
+    <?php endif; ?>
 
 <?php require_once __DIR__ . '/../layouts/footer.php';

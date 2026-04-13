@@ -70,13 +70,13 @@ class PostController extends Controller {
     }
 
     public function edit($id) {
-        $this->auth();
+        $this->adminOnly();
         $post = $this->repo->findById($id);
         $this->render('posts/edit', ['post' => $post]);
     }
 
     public function update($id) {
-        $this->auth();
+        $this->adminOnly();
         if (!$this->verifyCsrfToken()) {
             header('Location: /');
             exit();
@@ -103,7 +103,7 @@ class PostController extends Controller {
     }
 
     public function destroy($id) {
-        $this->auth();
+        $this->adminOnly();
         if (!$this->verifyCsrfToken()) {
             header('Location: /');
             exit();

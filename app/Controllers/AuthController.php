@@ -52,6 +52,12 @@ class AuthController extends Controller {
 
     public function register() {
 
+        $name = $_POST['name'];
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+        $confirm_password = $_POST['confirm_password'];
+        $_SESSION['old'] = ['name' => $name, 'email' => $email];
+
         $validator = new Validator($_POST);
         $validator->required('name')->required('email')->required('password')->required('confirm_password')
             ->minLength('password', 4)->minLength('confirm_password', 4)->email('email');
@@ -62,10 +68,6 @@ class AuthController extends Controller {
             exit();
         }
 
-        $name = $_POST['name'];
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-        $confirm_password = $_POST['confirm_password'];        
 
         if ($password !== $confirm_password) {
             $this->setFlash('error', 'Пароли не совпадают');
@@ -73,12 +75,28 @@ class AuthController extends Controller {
             exit();
         }
 
+        $user = (new User())->findByEmail($email);
+        if ($user) {
+            $this->setFlash('error', 'Email уже занят');
+            header('Location: /register');
+            exit();
+        }
+
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
         (new User())->create($name, $email, $hashed_password);
+        
+        $user = (new User())->findByEmail($email);
+        session_regenerate_id(true);
+        
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['user_email'] = $user['email'];
+        $_SESSION['user_name'] = $user['name'];
+        $_SESSION['user_role'] = $user['role'];
+        unset($_SESSION['old']);
 
         $this->setFlash('success', 'Пользователь успешно зарегистрирован');
 
-        header('Location: /login');
+        header('Location: /');
         exit();
     }
 
