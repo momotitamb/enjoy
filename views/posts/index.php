@@ -21,7 +21,7 @@ require_once __DIR__ . '/../layouts/header.php'; ?>
             <div class="post-actions">
                 <a href="/posts/<?= $post['id'] ?>/show" class="btn btn-secondary">Просмотр</a>
                 
-                <?php if ($_SESSION['user_role'] === 'admin'): ?>
+                <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
 
                     <a href="/posts/<?= $post['id'] ?>/edit" class="btn btn-secondary">Редактировать</a>
 

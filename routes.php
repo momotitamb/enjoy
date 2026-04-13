@@ -19,7 +19,6 @@ $router->get('/posts', [PostController::class, 'index']);
 $router->get('/users', [UserController::class, 'index']);
 $router->get('/categories', [CategoryController::class, 'index']);
 $router->post('/posts', [PostController::class, 'store']);
-$router->post('/users', [UserController::class, 'store']);
 $router->post('/categories', [CategoryController::class, 'store']);
 $router->put('/posts/{id}', [PostController::class, 'update']);
 $router->put('/users/{id}', [UserController::class, 'update']);

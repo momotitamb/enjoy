@@ -50,7 +50,7 @@ class PostController extends Controller {
 
         if ($validator->fails()) {
             $this->setFlash('error', implode(', ', $validator->errors()));
-            header('Location: /');
+            header('Location: /posts/create');
             exit();
         }
 
@@ -87,7 +87,7 @@ class PostController extends Controller {
 
         if ($validator->fails()) {
             $this->setFlash('error', implode(', ', $validator->errors()));
-            header('Location: /');
+            header("Location: /posts/$id/edit");
             exit();
         }
 

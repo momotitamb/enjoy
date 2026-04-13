@@ -17,7 +17,7 @@ require_once __DIR__ . '/../layouts/header.php'; ?>
             
             <div class="post-actions">
 
-                <?php if ($_SESSION['user_role'] === 'admin'): ?>
+                <?php if (isset($_SESSION['user_role']) && ($_SESSION['user_role'] === 'admin')): ?>
                     
                     <form class="inline" action="/categories/<?= $category['id'] ?>" method="POST" onsubmit="return confirm('Вы уверены?')">
                         <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
