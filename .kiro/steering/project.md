@@ -69,101 +69,77 @@ routes.php       — all routes
 ### Core Architecture
 - Singleton Database class with PDO
 - Router with dynamic params {id}, {slug}, HTTP method spoofing (_method)
-- Router fix: parse_url() + fixed param passing (isset($matches[1]) ? $matches[1] : null)
-- Abstract Controller with render(), auth(), adminOnly(), verifyCsrfToken()
+- Abstract Controller with render(), auth(), adminOnly(), verifyCsrfToken(), setFlash(), getFlash()
 - Layout system (header/footer) with active nav links
 - spl_autoload_register autoloader
 - Service Container with bind()/make() for Dependency Injection
 - session_start() in public/index.php (global)
-- CSRF token generated in public/index.php, verified in all POST/PUT/DELETE methods
-- Validator class skeleton (data, errors, errors()) — methods not yet implemented
+- CSRF protection on all mutating forms
+- Validator class — required(), minLength(), email(), fails(), errors()
+- Flash messages — setFlash/getFlash in Controller, displayed in header.php
+- Form repopulation on error via $_SESSION['old']
 
 ### OOP Concepts Covered
 - Abstract classes, Interfaces, Traits
 - Static methods, self:: vs static:: (late static binding)
-- Class constants (STATUS_DRAFT, STATUS_PUBLISHED, ROLE_USER, ROLE_ADMIN)
-- Singleton pattern, Repository pattern, Dependency Injection
-- Type declarations, union types (array|false)
-- Strict comparison (===)
+- Class constants, Singleton, Repository pattern, Dependency Injection
+- Type declarations, union types, strict comparison
+- Fluent interface (method chaining) — Validator
+- Container/DI — разобрали полностью: bind создаёт схему, make исполняет
+- Abstractions vs concrete implementations — разобрали
 
 ### Authentication (COMPLETED)
-- AuthController — loginForm(), login(), registerForm(), register(), logout()
-- Sessions — user_id, user_email, user_name, user_role
-- password_hash() / password_verify()
-- session_regenerate_id(true) after login (before writing to session)
-- Route protection — auth() for logged-in, adminOnly() for admins
-- Views: auth/login.php, auth/register.php (no value attributes, no CSRF needed)
+- register() — валидация, проверка email на уникальность, автологин после регистрации, repopulate form
+- login() — валидация, flash на ошибку, session_regenerate_id
+- logout(), route protection — auth(), adminOnly()
 
-### Models
-- Post — all(), find(), findBySlug(), create($title,$slug,$content,$user_id,$category_id=null),
-  update(), delete(), getCategory(), allWithCategory($page,$perPage), allWithAuthor(),
-  allWithRelations(), count()
-- Category — all(), find(), create(), delete(), generateSlug(), getPostsCount()
-  (uses ORDER BY created_at DESC, NOT GROUP BY)
-- User — all(), find(), findByEmail(), create($name,$email,$password),
-  update($name,$email,$id), delete(), getPostsCount()
+### Models (COMPLETED)
+- Post, Category, User — полный CRUD + relations
 
-### SQL
-- CRUD with prepared statements
-- JOIN queries (INNER JOIN, LEFT JOIN)
-- Aggregate functions (COUNT, GROUP BY)
-- Pagination with LIMIT/OFFSET (bindValue with PDO::PARAM_INT)
-- QueryBuilder class — select(), where(), orderBy(), get()
+### Controllers (COMPLETED)
+- PostController — CRUD, adminOnly на edit/update/destroy, валидация в store/update, flash везде
+- CategoryController — index(public), store/destroy (adminOnly), валидация, flash
+- AuthController — полная аутентификация с валидацией и flash
+- UserController — index/show (auth), edit/update/destroy (adminOnly), валидация, flash
 
-### Frontend & Views
-- Full CRUD for posts (index, show, create, edit, delete)
-- Category pages (index with delete for admin, create form)
-- User pages — index, show, edit (all complete)
-- Auth pages — login, register
-- Pagination with page numbers and prev/next
-- Dark theme CSS — .post-card, .card, .card-title, .btn-link, .user-menu dropdown
-- btn alignment fix: line-height on a.btn, button.btn
-- Forms with PUT/DELETE method spoofing
-- CSRF hidden field in all POST/PUT/DELETE forms
-- Nav: user dropdown (name → logout on hover), auth links for guests
-- Conditional rendering — buttons hidden for guests
-
-### Controllers
-- PostController — full CRUD, auth() on write methods, verifyCsrfToken() on store/update/destroy
-- CategoryController — index(public), create/store/destroy (adminOnly + verifyCsrfToken)
-- AuthController — login/register/logout, sessions, password hashing, session_regenerate_id
-- UserController — index/show (auth), edit/update/destroy (adminOnly + verifyCsrfToken)
-
-### Security
-- CSRF protection on all mutating forms
-- session_regenerate_id after login
-- auth() and adminOnly() route protection
+### Security (COMPLETED)
+- CSRF на всех мутирующих формах
+- session_regenerate_id после логина
+- auth() и adminOnly() защита маршрутов
 - password_hash / password_verify
-- htmlspecialchars on output
+- htmlspecialchars на выводе
 - PDO prepared statements
+- isset() проверки перед $_SESSION['user_role'] во вьюхах
+
+### Frontend (COMPLETED)
+- Полный CRUD вьюхи для постов, категорий, пользователей
+- Даты created_at на постах (все) и пользователях (только для админа)
+- Подтверждение удаления — onsubmit confirm на всех формах удаления
+- Flash сообщения — alert-success / alert-error в header.php
+- Repopulate форм регистрации через $_SESSION['old']
 
 ## What's Left To Do
 
-### IN PROGRESS
-- [ ] Validator class — add required(), minLength(), email() methods and use in controllers
-- [ ] Flash messages — show errors/success after redirect
+### Next Session — Continue Here
+- [ ] Магические методы __get, __set, __toString — начали __toString, не закончили
+- [ ] Push проекта на GitHub
+- [ ] Алгоритмы — algorithms.php (bubble sort, binary search, рекурсия)
+- [ ] Git workflow — ветки, merge, конфликты
+- [ ] Нарисовать схему проекта + цепочку Container→Router→Controller (студент просил)
 
-### Project Completion
-- [ ] Show created_at dates on posts and users
-- [ ] Confirmation dialog on delete buttons (onclick confirm)
-- [ ] Write README.md for GitHub
-- [ ] Push to GitHub as portfolio project
-- [ ] Integrate QueryBuilder into models (optional)
+### Postponed (не срочно, вернуться позже)
+- [ ] Подготовка к интервью
+- [ ] Linux основы
+- [ ] Задачи renamer и maze.php — незаконченные
+
+### Optional Project Improvements
+- [ ] Integrate QueryBuilder into models
 - [ ] Add SQL injection protection to QueryBuilder
 - [ ] Add join() method to QueryBuilder
 
-### Topics To Revisit (Marked Difficult)
-- [ ] Container, make(), DI — review with Laravel comparison
-- [ ] Magic methods __get, __set, __toString — practical examples
-- [ ] Caching and logging in pure PHP
-
 ### After Project (Job Prep)
-- [ ] Algorithms in PHP (bubble sort, binary search, recursion) — algorithms.php exists
-- [ ] Git workflow (branches, merge, conflicts)
-- [ ] Typical interview questions
-- [ ] Return to renamer and maze.php tasks
-- [ ] Linux basics
 - [ ] See how Repository/DI/Container are implemented in Laravel
+- [ ] Caching and logging in pure PHP
 
 ## Important Technical Notes
 - PDO + LIMIT/OFFSET: must use bindValue($pos, $val, PDO::PARAM_INT)
@@ -172,14 +148,14 @@ routes.php       — all routes
 - CategoryController has no repository — uses Category model directly
 - AuthController NOT registered in Container (no DI needed)
 - config/database.php is in .gitignore
-- QueryBuilder needs SQL injection protection before production use
 - MySQL via phpMyAdmin at http://localhost/phpmyadmin
 - User roles: 'user' (default), 'admin' — checked via $_SESSION['user_role'] === 'admin'
 - display_errors = 1 in index.php (dev only — remove before production)
 - Post::create() param order: $title, $slug, $content, $user_id, $category_id=null
 - Router passes params as: isset($matches[1]) ? $matches[1] : null
+- $_SESSION['old'] used for form repopulation in register — unset after successful registration
+- Services/ folder is intentionally empty — planned for Service Layer pattern
 
 ## Difficult Topics (Need Extra Attention)
-- Container, DI, make() — student found difficult
-- Magic methods __get, __set, __toString — postponed
+- Magic methods __get, __set, __toString — IN PROGRESS, start here next session
 - Any new syntax must be explained immediately with full context
